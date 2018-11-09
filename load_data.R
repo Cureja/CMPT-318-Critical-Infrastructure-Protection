@@ -34,3 +34,15 @@ test1_data = read.table("data/test1.txt",
                         header=TRUE, sep=',')
 test1_data <- format_data(train_data)
 
+#threshold for difference between the average of moving average, and the current value
+ma_threshold = 2
+#Moving average
+for(i in c(8:nrow(train_data))) {
+  window <- na.omit(train_data$Global_active_power[c((i - 7) : i)])
+  average <- mean(window, na.rm=TRUE)
+  
+  if(abs(window[1] - average) > ma_threshold){
+    print(window[1])
+    print("^ is an anomaly.")
+  }
+}
