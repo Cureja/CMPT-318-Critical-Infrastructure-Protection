@@ -1,14 +1,15 @@
-dir = getwd()
+dir = "C:/Users/10yen/Desktop/318/R/Project/CMPT-318-Critical-Infrastructure-Protection/past_assignments"
 setwd(dir)
 
-
-# install.packages("chron")
+#install.packages("chron")
+#install.packages("depmixS4")
+#install.packages("ggplot2")
 library(chron)
 library(depmixS4)
 library(ggplot2)
 
 set.seed(1) 
-data = read.table("Dataset1.txt", 
+data = read.table("../../../Assignment2/Dataset1.txt", 
                   header=TRUE, sep=',')
 # Convert to datetime format
 data$Date <- as.POSIXlt(data$Date, format="%d/%m/%Y")
@@ -62,6 +63,49 @@ mod2 <- depmix(list(Global_active_power~1),
 fm2 <- fit(mod2)
 summary(fm2)
 print(fm2)
+
+save(fm2, file = "fm_model.rda")
+
+getmodel(fm2,which="prior",state=1,number=1)
+
+fmPrior <- getmodel(fm2,which="prior",state=1,number=1)@parameters$coefficients
+
+arr <- matrix(nrow=14,ncol=14,byrow=TRUE)
+for(n in 1:14){
+  arr[n,] <- (fm2)@transition[[n]]@parameters$coefficients
+}
+
+respFirstParam <- (fm2)@response[[1]][[1]]@parameters$coefficients
+respFirstParam
+
+arrRespCoef <- matrix(nrow=14,ncol=1,byrow=TRUE)
+arrRespSd <- matrix(nrow=14,ncol=1,byrow=TRUE)
+for(n in 1:14){
+  arrRespCoef[n,] <- (fm2)@response[[n]][[1]]@parameters$coefficients
+  arrRespSd[n,] <- (fm2)@response[[n]][[1]]@parameters$sd
+}
+
+arrResp <- cbind(arrRespCoef, arrRespSd)
+
+aCheck <- depmix(list(Global_active_power~1),
+                 data=sundaymorning,
+                 nstates=14,
+                 respstart=arrResp,
+                 instart=fmPrior,
+                 trstart=arr,
+                 family=list(gaussian()),
+                 ntimes=c(rep(181, 52)))
+
+summary(aCheck)
+print(aCheck)
+
+load("fm_model.rda")
+newthing <- fit(fm2, newdata = aCheck)
+summary(aCheck)
+print(aCheck)
+print(fm2)
+summary(newthing)
+print(newthing)
 
 # Convert time to timeformat 
 minute_average_morning$Time <- as.POSIXct(minute_average_morning$Group.1, 
