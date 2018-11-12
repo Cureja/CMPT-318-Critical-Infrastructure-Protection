@@ -38,9 +38,9 @@ test1_data = read.table("data/test1.txt",
 test1_data <- format_data(test1_data)
 
 range <- train_data[0, c(1:2)]
-range <- rbind(range, train_data[c(1:10), c(1:2)])
+range <- rbind(range, train_data[c(1:300), c(1:2)])
 
-out_of_range <- function(df, range) {
+out_of_range <- function(df, range, col_num) {
   anomalies <- data.frame()
   anomalies <- df[0, c(1:6)]
 
@@ -48,18 +48,19 @@ out_of_range <- function(df, range) {
                         & train_data$Date <= range[nrow(range), 1]
                         & train_data$Time >= range[1, 2]
                         & train_data$Time <= range[nrow(range), 2])
-  maximum <- max(date_window$Global_active_power, na.rm = TRUE)
-  minimum <- min(date_window$Global_active_power, na.rm = TRUE)
+  maximum <- max(date_window[, col_num], na.rm = TRUE)
+  minimum <- min(date_window[, col_num], na.rm = TRUE)
   for(i in 1:nrow(df)) {
-    if(df$Global_active_power[i] > maximum | df$Global_active_power[i] < minimum ) {
+    if(df[i, col_num] > maximum | df[i, col_num] < minimum ) {
+      t <- Sys.time()
       anomalies <- rbind(anomalies, df[i, ])
+      print(Sys.time() - t)
     }
   }
   return(anomalies)
 }
 
-
-anom_oor <- out_of_range(test1_data, range)
+anom_oor <- out_of_range(test1_data, range, 4)
 
 #Moving average of 7 observations. If the first observation and the average's difference is past a
 #threshold, it will be added to the list of anomalies.
