@@ -15,7 +15,7 @@ format_data <- function(df){
   # Format the dataset to remove/include columns
   
   # Only take Date, Time and Global_active_power
-  df <- df[, c(1,2,3)]
+  df <- df[, c(1:6)]
   df$Datetime <- paste(df$Date, df$Time)
   df$Datetime <- as.POSIXlt(df$Datetime, format='%d/%m/%Y %H:%M:%S')
   df$Date <- as.POSIXlt(df$Date, format='%d/%m/%Y')
@@ -64,11 +64,11 @@ anom_oor <- out_of_range(test1_data, range, 4)
 
 #Moving average of 7 observations. If the first observation and the average's difference is past a
 #threshold, it will be added to the list of anomalies.
-moving_average <- function(df, threshold) {
+moving_average <- function(df, threshold, col_num) {
   anomalies <- data.frame()
-  anomalies <- df[0, c(1:6)]
+  anomalies <- df[0, ]
   for(i in c(7:nrow(df))) {
-    window <- na.omit(df$Global_active_power[c((i - 7) : i)])
+    window <- na.omit(df[c((i - 7) : i), col_num])
     average <- mean(window, na.rm=TRUE)
     if(abs(window[1] - average) > threshold){
       anomalies <- rbind(anomalies, df[(i - 6), ])
@@ -82,5 +82,4 @@ moving_average <- function(df, threshold) {
   return(anomalies)
 }
 
-anoms <- moving_average(head(test1_data, 10000), 1)
-anomstrain <- moving_average(head(train_data, 10000), 1)
+anoms <- moving_average(head(test1_data, 10000), 1, 4)
