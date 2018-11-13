@@ -4,9 +4,11 @@ setwd(dir)
 #install.packages("chron")
 #install.packages("depmixS4")
 #install.packages("ggplot2")
+#install.packages("HMM")
 library(chron)
 library(depmixS4)
 library(ggplot2)
+library(HMM)
 
 set.seed(1) 
 data = read.table("../../../Assignment2/Dataset1.txt", 
@@ -98,6 +100,29 @@ aCheck <- depmix(list(Global_active_power~1),
 
 summary(aCheck)
 print(aCheck)
+
+fmPrior
+
+arrACheck <- matrix(nrow=14,ncol=14,byrow=TRUE)
+for(n in 1:14){
+  arrACheck[n,] <- (aCheck)@transition[[n]]@parameters$coefficients
+}
+
+(aCheck)@response[[1]][[1]]@parameters$coefficients
+
+arrRespACheck <- matrix(nrow=14,ncol=2,byrow=TRUE)
+for(n in 1:14){
+  arrRespACheck[n,1] <- (aCheck)@response[[n]][[1]]@parameters$coefficients
+  arrRespACheck[n,2] <- (aCheck)@response[[n]][[1]]@parameters$sd
+}
+
+arrRespACheck
+
+hmm = initHMM(States=c(1:14),
+              Symbols=c(1:14),
+              transProbs=arrACheck,
+              emissionProbs=arrRespACheck)
+print(hmm)
 
 load("fm_model.rda")
 newthing <- fit(fm2, newdata = aCheck)
