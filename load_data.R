@@ -11,6 +11,19 @@ get_period <- function(datetime){
   return(datetime$period)
 }
 
+get_season <- function(datetime) {
+  # Creates a column to show which season the datapoint is from
+  # 80  = March 21
+  # 172 = June 21
+  # 264 = Sept 21
+  # 355 = Dec  21
+  datetime$Season[datetime$yday >= 80 & datetime$yday <  172] <- "Spring"
+  datetime$Season[datetime$yday >= 172 & datetime$yday <  264] <- "Summer"
+  datetime$Season[datetime$yday >= 264 & datetime$yday <  355] <- "Autumn"
+  datetime$Season[datetime$yday >= 355 | datetime$yday <  80] <- "Winter"
+  return(datetime$Season)
+}
+
 format_data <- function(df){
   # Format the dataset to remove/include columns
   
@@ -23,6 +36,7 @@ format_data <- function(df){
   # TRUE if the day is a weekday, False if the day is a weekend
   df$Weekday <- ifelse(df$Datetime$wday >= 1 & df$Datetime$wday <=5, TRUE, FALSE)
   df$Period <- get_period(df$Datetime)
+  df$Season <- get_season(df$Datetime)
   
   df <- na.omit(df)
   return(df)
@@ -32,10 +46,25 @@ train_data = read.table("data/Train Data.txt",
                         header=TRUE, sep=',')
 train_data <- format_data(train_data)
 
-
 test1_data = read.table("data/test1.txt", 
                         header=TRUE, sep=',')
 test1_data <- format_data(test1_data)
+
+test2_data = read.table("data/test2.txt", 
+                        header=TRUE, sep=',')
+test2_data <- format_data(test2_data)
+
+test3_data = read.table("data/test3.txt", 
+                        header=TRUE, sep=',')
+test3_data <- format_data(test3_data)
+
+test4_data = read.table("data/test4.txt", 
+                        header=TRUE, sep=',')
+test4_data <- format_data(test4_data)
+
+test5_data = read.table("data/test5.txt", 
+                        header=TRUE, sep=',')
+test5_data <- format_data(test5_data)
 
 range <- train_data[0, c(1:2)]
 range <- rbind(range, train_data[c(1:300), c(1:2)])

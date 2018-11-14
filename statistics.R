@@ -1,14 +1,3 @@
-get_season <- function(datetime) {
-  # Creates a column to show which season the datapoint is from
-  
-  year = unique(datetime$year) + 1900 
-  datetime$Season[datetime >= paste(year, '03', '21', sep='-') & datetime <  paste(year, '06', '21', sep='-')] <- "Spring"
-  datetime$Season[datetime >= paste(year, '06', '21', sep='-') & datetime <  paste(year, '09', '21', sep='-')] <- "Summer"
-  datetime$Season[datetime >= paste(year, '09', '21', sep='-') & datetime <  paste(year, '12', '21', sep='-')] <- "Fall"
-  datetime$Season[datetime >= paste(year, '12', '21', sep='-') | datetime <  paste(year, '03', '21', sep='-')] <- "Winter"
-  return(datetime$Season)
-}
-
 get_stats <- function(input_df) {
   # Takes 1 year of data and finds the statistics by season, period and day type
   # Work with 1 year at a time to improve speed
@@ -24,9 +13,16 @@ get_stats <- function(input_df) {
   return(df)
 }
 
-year2007 <- subset(train_data, Datetime$year == 107)
-year2007$Season <- get_season(year2007$Datetime)
+get_hourly_average <- function(input_df) {
+  # Get the average global active power per hour
+  input_df$hour <- cut(as.POSIXct(input_df$Time, format="%H:%M:%S"), breaks="hour")
+  df <- aggregate(Global_active_power ~ Season+Weekday+hour, input_df, FUN=mean)
+  df$hour <- format(strptime(df$hour, "%Y-%m-%d %H:%M:%S"), "%H")
+  return(df)
+}
 
+train_hourly <- get_hourly_average(train_data)
+train_stats <- get_stats(train_data)
 
-stats2007 <- get_stats(year2007)
-
+test1_hourly <- get_hourly_average(test1_data)
+test1_stats <- get_stats(test1_data)
