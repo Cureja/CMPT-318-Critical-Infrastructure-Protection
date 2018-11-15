@@ -1,23 +1,25 @@
 library(ggplot2)
+library(lubridate)
 
-plot_hourly <- function(input_df, weekday) {
+plot_hourly <- function(input_df, weekday, feature) {
+  input_df$hour <- hour(strptime(input_df$hour, format = "%H:%M:%S"))
   seasons = c('Spring', 'Summer', 'Autumn', 'Winter')
   plot <- ggplot()
   for (season in seasons) {
     season_df = subset(input_df, Season == season & Weekday == weekday )
     plot <- plot + layer(data = season_df,
-                         mapping = aes(x=hour, y=Global_active_power, color = Season), 
+                         mapping = aes(x=hour, y=mean, color = Season), 
                          geom = 'point',
                          stat = "identity", 
                          position = position_identity()
     ) + geom_line(data = season_df,
                   aes(hour, 
-                      Global_active_power, 
+                      mean, 
                       group = 1,
                       color = Season))
   }
-  plot <- plot + labs(x= "Hour", y='Average Global Active Power')
-  title <- "Average Hourly Global Active Power across each Season during the"
+  plot <- plot + labs(x= "Hour", y=paste('Average', feature))
+  title <- paste("Average Hourly", feature, "across each Season during the")
   
   if (weekday) {
     title <- paste(title, "Weekdays")
@@ -47,8 +49,8 @@ plot_hourly <- function(input_df, weekday) {
   return(plot)
 }
 
-train_weekday_plot <- plot_hourly(train_hourly, TRUE)
-train_weekend_plot <- plot_hourly(train_hourly, FALSE)
+train_weekday_plot <- plot_hourly(train_hourly, TRUE, 'Global Active Power')
+train_weekend_plot <- plot_hourly(train_hourly, FALSE, 'Global Active Power')
 
-test1_weekday_plot <- plot_hourly(test1_hourly, TRUE)
-test1_weekend_plot <- plot_hourly(test1_hourly, FALSE)
+test1_weekday_plot <- plot_hourly(test1_hourly, TRUE, 'Global Active Power')
+test1_weekend_plot <- plot_hourly(test1_hourly, FALSE, 'Global Active Power')

@@ -42,28 +42,28 @@ format_data <- function(df){
   return(df)
 }
 
-train_data = read.table("data/Train Data.txt", 
-                        header=TRUE, sep=',')
+train_data <- read.table("data/Train Data.txt", 
+                         header=TRUE, sep=',')
 train_data <- format_data(train_data)
 
-test1_data = read.table("data/test1.txt", 
-                        header=TRUE, sep=',')
+test1_data <- read.table("data/test1.txt", 
+                         header=TRUE, sep=',')
 test1_data <- format_data(test1_data)
 
-test2_data = read.table("data/test2.txt", 
-                        header=TRUE, sep=',')
+test2_data <- read.table("data/test2.txt", 
+                         header=TRUE, sep=',')
 test2_data <- format_data(test2_data)
 
-test3_data = read.table("data/test3.txt", 
-                        header=TRUE, sep=',')
+test3_data <- read.table("data/test3.txt", 
+                         header=TRUE, sep=',')
 test3_data <- format_data(test3_data)
 
-test4_data = read.table("data/test4.txt", 
-                        header=TRUE, sep=',')
+test4_data <- read.table("data/test4.txt", 
+                         header=TRUE, sep=',')
 test4_data <- format_data(test4_data)
 
-test5_data = read.table("data/test5.txt", 
-                        header=TRUE, sep=',')
+test5_data <- read.table("data/test5.txt", 
+                         header=TRUE, sep=',')
 test5_data <- format_data(test5_data)
 
 range <- train_data[0, c(1:2)]
