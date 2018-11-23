@@ -1,3 +1,5 @@
+library(ggplot2)
+
 get_period <- function(datetime){
   # From the Datetime datatype, create a column to represent what time period it is
   # 5am-9am, 9am-5pm, 5pm-9pm, 9pm-5am not inclusive
@@ -42,8 +44,8 @@ format_data <- function(df){
   return(df)
 }
 
-dir = "C:/Users/10yen/Desktop/318/R/Project/CMPT-318-Critical-Infrastructure-Protection"
-setwd(dir)
+#dir = "C:/Users/10yen/Desktop/318/R/Project/CMPT-318-Critical-Infrastructure-Protection"
+#setwd(dir)
 
 train_data = read.table("data/Train Data.txt", 
                         header=TRUE, sep=',')
@@ -69,38 +71,50 @@ test5_data = read.table("data/test5.txt",
                         header=TRUE, sep=',')
 test5_data <- format_data(test5_data)
 
-range <- train_data[0, c(1:2)]
-range <- rbind(range, train_data[c(1:300), c(1:2)])
 
+winter_train_data <- subset(train_data, Season == "Winter")
+winter_test1_data <- subset(test1_data, Season == "Winter")
 
-#forwardbackward try from lora. will delete if doesn't work
-#install.packages("depmixS4")
-
-
-out_of_range <- function(df, range, col_num) {
+#Takes the min and max of train_df, and compares it to a given df. Any points that fall above the max or
+#below the min are deemed anomalous
+out_of_range <- function(df, train_df, col_num) {
   anomalies <- data.frame()
-  anomalies <- df[0, c(1:6)]
+  anomalies <- df[0, c(1:col_num)]
 
-  date_window <- subset(train_data, train_data$Date >= range[1, 1] 
-                        & train_data$Date <= range[nrow(range), 1]
-                        & train_data$Time >= range[1, 2]
-                        & train_data$Time <= range[nrow(range), 2])
-  maximum <- max(date_window[, col_num], na.rm = TRUE)
-  minimum <- min(date_window[, col_num], na.rm = TRUE)
+  maximum <- max(train_df[, col_num], na.rm = TRUE)
+  minimum <- min(train_df[, col_num], na.rm = TRUE)
   for(i in 1:nrow(df)) {
     if(df[i, col_num] > maximum | df[i, col_num] < minimum ) {
-      t <- Sys.time()
       anomalies <- rbind(anomalies, df[i, ])
-      print(Sys.time() - t)
     }
   }
   return(anomalies)
 }
 
-anom_oor <- out_of_range(test1_data, range, 4)
+oor <- out_of_range(winter_test1_data, winter_train_data, 3)
 
-#Moving average of 7 observations. If the first observation and the average's difference is past a
-#threshold, it will be added to the list of anomalies.
+#Plot of the the out of range function when asked to compare the global active power of train_data and
+#test1_data's global active power during the winter. Dotted lines are used to denote the max and min of
+#the train data.
+oorplot <- ggplot() +
+  layer(data = winter_test1_data,
+        mapping = aes(x=as.POSIXct(winter_test1_data$Date), y=winter_test1_data$Global_active_power, color = "Normal"), 
+        geom = "point",
+        stat = "identity", 
+        position = position_identity()) + 
+  layer(data = oor,
+        mapping = aes(x=as.POSIXct(oor$Date), y=oor$Global_active_power, color = "Out of Range"), 
+        geom = "point",
+        stat = "identity", 
+        position = position_identity()) +
+  labs(x = "Date", y = 'Global Active Power') +
+  geom_hline(yintercept = max(winter_train_data$Global_active_power), linetype ="dashed", color = "red") +
+  geom_hline(yintercept = min(winter_train_data$Global_active_power), linetype ="dashed", color = "red")
+print(oorplot)
+
+
+#Moving average of 7 observations' data in a given column. If the first observation and the average's
+#difference is past a threshold, it will be added to the list of anomalies.
 moving_average <- function(df, threshold, col_num) {
   anomalies <- data.frame()
   anomalies <- df[0, ]
@@ -119,4 +133,4 @@ moving_average <- function(df, threshold, col_num) {
   return(anomalies)
 }
 
-anoms <- moving_average(head(test1_data, 10000), 1, 4)
+anoms <- moving_average(test1_data, 1, 3)
