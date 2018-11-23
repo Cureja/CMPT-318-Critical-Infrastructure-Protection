@@ -118,11 +118,11 @@ for(n in 1:14){
 
 arrRespACheck
 
-hmm = initHMM(States=c(1:14),
-              Symbols=c(1:14),
-              transProbs=arrACheck,
-              emissionProbs=arrRespACheck)
-print(hmm)
+#hmm = initHMM(States=c(1:14),
+#              Symbols=c(1:14),
+#              transProbs=arrACheck,
+#              emissionProbs=arrRespACheck)
+#print(hmm)
 
 load("fm_model.rda")
 newthing <- fit(fm2, newdata = aCheck)
