@@ -37,7 +37,7 @@ trainMaxArr=c(0,0,0,0,0)
 
 nrow(projectsundaymorning)
 for(row in seq(from=1, to=55620, by=180)){
-  row = 1
+  
   dDate = projectsundaymorning[row,]$Date
   dDate = str_remove(dDate, " PST")
   dDate
@@ -54,32 +54,42 @@ for(row in seq(from=1, to=55620, by=180)){
   if (checkedMax == F && dLoopTrainLog$logLike < trainMaxArr[1]) {
     trainMaxArr[1] = dLoopTrainLog$logLike
     checkedMax = T
+  } else {
+    checkedMax = F
   }
   
   if (checkedMax == F && dLoopTrainLog$logLike < trainMaxArr[2]) {
     trainMaxArr[2] = dLoopTrainLog$logLike
     checkedMax = T
+  } else {
+    checkedMax = F
   }
   
   if (checkedMax == F && dLoopTrainLog$logLike < trainMaxArr[3]) {
     trainMaxArr[3] = dLoopTrainLog$logLike
     checkedMax = T
+  } else {
+    checkedMax = F
   }
   
   if (checkedMax == F && dLoopTrainLog$logLike < trainMaxArr[4]) {
     trainMaxArr[4] = dLoopTrainLog$logLike
     checkedMax = T
+  } else {
+    checkedMax = F
   }
   
   if (checkedMax == F && dLoopTrainLog$logLike < trainMaxArr[5]) {
     trainMaxArr[5] = dLoopTrainLog$logLike
     checkedMax = T
+  } else {
+    checkedMax = F
   }
 }
 
 trainMaxArr
 
-testMaxArr=c(0,0,0,0,0)
+testMaxArr=c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
 for(row in seq(from=1, to=18360, by=180)){
   dDate = projectsundaymorningtest1[row,]$Date
@@ -117,6 +127,56 @@ for(row in seq(from=1, to=18360, by=180)){
   
   if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[5]) {
     testMaxArr[5] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[6]) {
+    testMaxArr[6] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[7]) {
+    testMaxArr[7] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[8]) {
+    testMaxArr[8] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[9]) {
+    testMaxArr[9] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[10]) {
+    testMaxArr[10] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[11]) {
+    testMaxArr[11] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[12]) {
+    testMaxArr[12] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[13]) {
+    testMaxArr[13] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[14]) {
+    testMaxArr[14] = dLoopTest1Log$logLike
+    checkedMax = T
+  }
+  
+  if (checkedMax == F && dLoopTest1Log$logLike < testMaxArr[15]) {
+    testMaxArr[15] = dLoopTest1Log$logLike
     checkedMax = T
   }
 }
