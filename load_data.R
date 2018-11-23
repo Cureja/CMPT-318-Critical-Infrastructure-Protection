@@ -1,7 +1,8 @@
+library(lubridate)
 get_period <- function(datetime){
   # From the Datetime datatype, create a column to represent what time period it is
-  # 5am-9am, 9am-5pm, 5pm-9pm, 9pm-5am not inclusive
-  period_end <- c(5, 9, 17, 21)
+  # 6am-9am, 9am-6pm, 6pm-9pm, 9pm-6am not inclusive
+  period_end <- c(6, 9, 18, 21)
   
   datetime$period[datetime$h >= period_end[1] & datetime$h < period_end[2]] <- "Morning"
   datetime$period[datetime$h >= period_end[2] & datetime$h < period_end[3]] <- "Midday"
@@ -35,10 +36,12 @@ format_data <- function(df){
   df$Time <- format(df$Time, format = "%H:%M:%S")
   # TRUE if the day is a weekday, False if the day is a weekend
   df$Weekday <- ifelse(df$Datetime$wday >= 1 & df$Datetime$wday <=5, TRUE, FALSE)
+  df$Day_of_week <- weekdays(as.Date(df$Datetime))
+  df$Month <- months(as.Date(df$Datetime))
   df$Period <- get_period(df$Datetime)
   df$Season <- get_season(df$Datetime)
   
-  df <- na.omit(df)
+  # df <- na.omit(df)
   return(df)
 }
 
