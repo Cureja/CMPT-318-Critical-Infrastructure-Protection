@@ -1,0 +1,28 @@
+nstates=11 (satNight): 1 feature
+BIC:  35346.44
+loglik=-19169.49
+
+nstates=15 (satNight): 1 feature
+BIC:  32012.79 
+loglik=-14670.01
+-> n=14 worse
+-> n=13 worse
+-> n=12 worse
+-> n=10 worse
+-> n=9 worse
+
+nstates=18 (satNight): 1 feature // didnt fully converge, started increasing after iteration 77
+'log Lik.' -8072.425 (df=359)
+BIC:  19922.52 
+-> same thing with n=16 but worse result than 18
+-> n=17 doesnt converge at all
+
+---------------------------------------------------------------------------------------------------
+
+nstates=4 (satNight): 2 features multinomial (seed=1)
+BIC:  12891.6
+'log Lik.' -6282.902 (df=31)
+
+nstates=4 (satNight): 2 features multinomial (seed=2)
+BIC:  7107.319 
+'log Lik.' -3390.76 (df=31)
