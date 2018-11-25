@@ -1,10 +1,44 @@
+nstates=7 (tuesMorning): 1 feature
+BIC:   6181.872
+loglik = -2764.69 (DF=62)
+-17.83 vs -376.64
+
+nstates=5 (tuesMorning): 1 feature
+BIC:   15280.51
+loglik = -7461.345 (DF=34)
+-49.41 vs -380.02
+
+nstates=9 (tuesMorning): 1 feature
+BIC:   3121.047
+loglik = -1044.844 (DF=98)
+-6.74 vs -375.84
+
+nstates=3 (tuesMorning): 1 feature
+BIC:   25860.55
+loglik = -12866.6 (DF=14)
+-82.945 vs -402.8
+
+nstates=10 (tuesMorning): 1 feature
+BIC:   -974.5681
+loglik = 1113.466 (DF=119)
+7.37 vs -370.107
+
+nstates=9 (tuesMorning): 1 feature
+BIC:   3121.047
+loglik = -1044.844 (DF=98)
+-6.74 vs -1539.266 (USING TEST 4)
+
+---------------------------------------------------------------------------------------
+
 nstates=11 (satNight): 1 feature
 BIC:  35346.44
-loglik=-19169.49
+loglik=-16926.1(df=142)
+-112.09 vs -375.86
 
 nstates=15 (satNight): 1 feature
 BIC:  32012.79 
-loglik=-14670.01
+loglik=-14670.01 (df = 254)
+-94.645 vs -371.517
 -> n=14 worse
 -> n=13 worse
 -> n=12 worse
@@ -14,6 +48,8 @@ loglik=-14670.01
 nstates=18 (satNight): 1 feature // didnt fully converge, started increasing after iteration 77
 'log Lik.' -8072.425 (df=359)
 BIC:  19922.52 
+-52.08 vs -298.248
+
 -> same thing with n=16 but worse result than 18
 -> n=17 doesnt converge at all
 
